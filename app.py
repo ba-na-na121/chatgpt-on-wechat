@@ -10,7 +10,20 @@ from common import const
 from config import load_config
 from plugins import *
 import threading
+from flask import Flask, request, make_response
+from threading import Thread
 
+# Flask app for WeChat server validation
+app = Flask(__name__)
+
+@app.route("/wx", methods=["GET"])
+def wechat_verify():
+    echostr = request.args.get("echostr")
+    return make_response(echostr or "hello")
+
+def start_http_server():
+    port = int(os.environ.get("PORT", 80))
+    app.run(host="0.0.0.0", port=port)
 
 def sigterm_handler_wrap(_signo):
     old_handler = signal.getsignal(_signo)
@@ -41,6 +54,7 @@ def start_channel(channel_name: str):
 
 
 def run():
+    Thread(target=start_http_server).start()
     try:
         # load config
         load_config()
