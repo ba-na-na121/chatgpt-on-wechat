@@ -22,7 +22,7 @@ def wechat_verify():
     return make_response(echostr or "hello")
 
 def start_http_server():
-    port = int(os.environ.get("PORT", 80))
+    port = int(os.environ.get("PORT", 443))
     app.run(host="0.0.0.0", port=port)
 
 def sigterm_handler_wrap(_signo):
